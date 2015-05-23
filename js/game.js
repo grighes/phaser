@@ -1,10 +1,17 @@
 // Initialise Phaser
-var game = new Phaser.Game(500, 340, Phaser.AUTO, 'gameDiv');
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameDiv');
 
 // Define our 'global' variable
 game.global = {
     score: 0
 };
+
+var player;
+var aliens;
+var score = 0;
+var scoreString = '';
+var lives;
+var starfield;
 
 // Add all the states
 game.state.add('boot', bootState);

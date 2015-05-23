@@ -1,9 +1,11 @@
 var bootState = {
+    
     preload: function() {
         
         // Load the image
         game.load.image('progressBar', 'assets/progressBar.png');
     },
+    
     create: function() {
         
         // Set some game settings

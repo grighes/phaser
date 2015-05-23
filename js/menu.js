@@ -3,10 +3,10 @@ var menuState = {
     create: function() {
         
         // Add a background image
-        game.add.image(0, 0, 'background');
+        game.add.image(0, 0, 'introTexture');
         
         // Display the name of the game
-        var nameLabel = game.add.text(game.world.centerX, 80, 'Drone Asteroid', {
+        var nameLabel = game.add.text(game.world.centerX, 80, 'Asteroid Desaster', {
             font: '50px Arial',
             fill: '#ffffff'
         });
@@ -35,6 +35,7 @@ var menuState = {
         upKey.onDown.addOnce(this.start, this);
     },
     
+
     start: function() {
         
         // Start the actual game

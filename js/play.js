@@ -3,24 +3,14 @@ var playState = {
 
     create: function() {
 
-        var player;
-        var aliens;
-        var score = 0;
-        var scoreString = '';
-        var lives;
-        
-        
         //  The scrolling starfield background
-        starfield = game.add.tileSprite(0, 0, 800, 600, 'background');
-
-
+        starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
 
         //  The hero!
         player = game.add.sprite(400, 500, 'player');
         player.anchor.setTo(0.5, 0.5);
         game.physics.enable(player, Phaser.Physics.ARCADE);
-
 
 
         //  The score
@@ -66,8 +56,12 @@ var playState = {
         //  When the tween loops it calls descend
         tween.onLoop.add(descend, this);
     },
-
-
+    
+    update: function() {
+        //  Scroll the background
+        starfield.tilePosition.y += 5;
+    },
+    
     // No changes
     playerDie: function() {
         // When the player dies, we go to the menu

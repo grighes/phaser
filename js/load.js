@@ -6,10 +6,10 @@ var loadState = {
             font: '30px Arial',
             fill: '#ffffff'
         });
-        loadingLabel.anchor.setTo(0.5, 0.5);
+        loadingLabel.anchor.setTo(0.5, -2);
         // Display the progress bar
         var progressBar = game.add.sprite(game.world.centerX, 200, 'progressBar');
-        progressBar.anchor.setTo(0.5, 0.5);
+        progressBar.anchor.setTo(0.5, -3);
         game.load.setPreloadSprite(progressBar);
         
         // Load all our assets
@@ -19,7 +19,8 @@ var loadState = {
         // game.load.image('wallV', 'assets/wallVertical.png');
         // game.load.image('wallH', 'assets/wallHorizontal.png');
         // Load a new asset that we will use in the menu state
-        game.load.image('background', 'assets/background.jpg');
+        game.load.image('introTexture', 'assets/introTexture1.jpg');
+        game.load.image('starfield', 'assets/starfield.png');
     },
     
     create: function() {
