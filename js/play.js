@@ -29,7 +29,6 @@ var playState = {
 
     // Game input
     cursors = game.input.keyboard.createCursorKeys();
-    // game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     // The score
@@ -46,21 +45,21 @@ var playState = {
       fill: '#fff'
     });
 
+    //  Text
+    stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
+      font: '84px Arial',
+      fill: '#fff'
+    });
+    
+    stateText.anchor.setTo(0.5, 0.5);
+    stateText.visible = false;
+
     for (var i = 0; i < 3; i++) {
       var life = lives.create(game.world.width - 100 + (30 * i), 60, 'life');
       life.anchor.setTo(0.5, 0.5);
       life.angle = 90;
       life.alpha = 0.4;
     }
-
-    //  Our ships bullets
-    /*    bullets = game.add.group();
-        bullets.enableBody = true;
-        bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        bullets.setAll('anchor.x', 0.5);
-        bullets.setAll('anchor.y', 1);
-        bullets.setAll('outOfBoundsKill', true);
-        bullets.setAll('checkWorldBounds', true);*/
 
     //  Our bullet group
     bullets = game.add.group();
@@ -81,11 +80,6 @@ var playState = {
     enemyBullets.setAll('anchor.y', 1);
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
-
-    /*//  All 40 of them
-    bullets.createMultiple(40, 'bullet');
-    bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 0.5);*/
 
     //  An explosion pool
     explosions = game.add.group();
@@ -114,16 +108,12 @@ var playState = {
       game.physics.arcade.velocityFromAngle(player.angle, 300, player.body.velocity);
     }
 
-    /*if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-      this.fireBullet();
-    }*/
-
     if (fireButton.isDown) {
       this.fireBullet();
     }
 
     if (game.time.now > firingTimer) {
-      // this.enemyFires();
+      this.enemyFires();
     }
 
     //  Run collision
@@ -136,19 +126,41 @@ var playState = {
 
   },
 
-  fireBullet: function() {
+  createAliens: function() {
 
-    if (game.time.now > bulletTime) {
-      bullet = bullets.getFirstExists(false);
-
-      if (bullet) {
-        bullet.reset(player.body.x + 16, player.body.y + 16);
-        bullet.lifespan = 2000;
-        bullet.rotation = player.rotation;
-        game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
-        bulletTime = game.time.now + 50;
+    for (var y = 0; y < 4; y++) {
+      for (var x = 0; x < 10; x++) {
+        var alien = aliens.create(x * 48, y * 50, 'invader');
+        alien.anchor.setTo(0.5, 0.5);
+        // alien.animations.add('fly', [0, 1, 2, 3], 20, true);
+        // alien.play('fly');
+        alien.body.moves = false;
       }
     }
+
+    aliens.x = 100;
+    aliens.y = 50;
+
+    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
+    var tween = game.add.tween(aliens).to({
+      x: 200
+    }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+    //  When the tween loops it calls descend
+    tween.onLoop.add(this.descend, this);
+  },
+
+  setupInvader: function(invader) {
+
+    invader.anchor.x = 0.5;
+    invader.anchor.y = 0.5;
+    invader.animations.add('kaboom');
+
+  },
+
+  descend: function() {
+
+    aliens.y += 10;
 
   },
 
@@ -176,7 +188,7 @@ var playState = {
       stateText.visible = true;
 
       //the "click to restart" handler
-      game.input.onTap.addOnce(this.restart,this);
+      game.input.onTap.addOnce(this.restart, this);
     }
 
   },
@@ -210,28 +222,59 @@ var playState = {
 
   },
 
-  createAliens: function() {
+  enemyFires: function() {
 
-    for (var y = 0; y < 4; y++) {
-      for (var x = 0; x < 10; x++) {
-        var alien = aliens.create(x * 48, y * 50, 'invader');
-        alien.anchor.setTo(0.5, 0.5);
-        // alien.animations.add('fly', [0, 1, 2, 3], 20, true);
-        // alien.play('fly');
-        alien.body.moves = false;
+    //  Grab the first bullet we can from the pool
+    enemyBullet = enemyBullets.getFirstExists(false);
+
+    livingEnemies.length = 0;
+
+    aliens.forEachAlive(function(alien) {
+
+      // put every living enemy in an array
+      livingEnemies.push(alien);
+    });
+
+
+    if (enemyBullet && livingEnemies.length > 0) {
+
+      var random = game.rnd.integerInRange(0, livingEnemies.length - 1);
+
+      // randomly select one of them
+      var shooter = livingEnemies[random];
+      // And fire the bullet from this enemy
+      enemyBullet.reset(shooter.body.x, shooter.body.y);
+
+      game.physics.arcade.moveToObject(enemyBullet, player, 120);
+      firingTimer = game.time.now + 2000;
+    }
+
+  },
+
+  fireBullet: function() {
+
+    if (game.time.now > bulletTime) {
+      bullet = bullets.getFirstExists(false);
+
+      if (bullet) {
+        bullet.reset(player.body.x + 16, player.body.y + 16);
+        bullet.lifespan = 2000;
+        bullet.rotation = player.rotation;
+        game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
+        bulletTime = game.time.now + 50;
+        /*bullet.reset(player.x, player.y + 8);
+        bullet.body.velocity.y = -400;
+        bulletTime = game.time.now + 200;*/
       }
     }
 
-    aliens.x = 100;
-    aliens.y = 50;
+  },
 
-    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(aliens).to({
-      x: 200
-    }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+  resetBullet: function(bullet) {
 
-    //  When the tween loops it calls descend
-    tween.onLoop.add(this.descend, this);
+    //  Called if the bullet goes out of the screen
+    bullet.kill();
+
   },
 
   /*  render: function() {
@@ -245,7 +288,7 @@ var playState = {
     },*/
 
   // Function to continue cenario
-  screenWrap: function(sprite) {
+  /*screenWrap: function(sprite) {
 
     if (player.x < 0) {
       player.x = game.width;
@@ -261,28 +304,7 @@ var playState = {
       player.y = 0;
     }
 
-  },
-
-  setupInvader: function(invader) {
-
-    invader.anchor.x = 0.5;
-    invader.anchor.y = 0.5;
-    invader.animations.add('kaboom');
-
-  },
-
-  descend: function() {
-
-    aliens.y += 10;
-
-  },
-
-  resetBullet: function(bullet) {
-
-    //  Called if the bullet goes out of the screen
-    bullet.kill();
-
-  },
+  },*/
 
   restart: function() {
 

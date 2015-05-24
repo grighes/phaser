@@ -14,10 +14,11 @@ var loadState = {
         
         // Load all our assets
         game.load.image('player', 'assets/player2.png');
-        game.load.image('bullet', 'assets/bullets.png');
+        game.load.image('bullet', 'assets/bullet.png');
         game.load.image('life', 'assets/green_ball.png');
         game.load.image('invader', 'assets/alien-sprite.png');
-        game.load.image('kaboom', 'assets/explosion.png');
+        game.load.image('enemyBullet', 'assets/enemy-bullet.png');
+        game.load.spritesheet('kaboom', 'assets/explode.png', 128, 128);
         // game.load.image('bullet', 'assets/bullets.png');
 
         // Load a new asset that we will use in the menu state
