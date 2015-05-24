@@ -13,14 +13,16 @@ var loadState = {
         game.load.setPreloadSprite(progressBar);
         
         // Load all our assets
-        game.load.image('player', 'assets/playerShip1_red.png');
-        game.load.image('enemy', 'assets/enemyBlack1.png');
-        game.load.image('coin', 'assets/star_gold.png');
-        // game.load.image('wallV', 'assets/wallVertical.png');
-        // game.load.image('wallH', 'assets/wallHorizontal.png');
+        game.load.image('player', 'assets/player2.png');
+        game.load.image('bullet', 'assets/bullets.png');
+        game.load.image('life', 'assets/green_ball.png');
+        game.load.image('invader', 'assets/alien-sprite.png');
+        game.load.image('kaboom', 'assets/explosion.png');
+        // game.load.image('bullet', 'assets/bullets.png');
+
         // Load a new asset that we will use in the menu state
-        game.load.image('introTexture', 'assets/introTexture1.jpg');
-        game.load.image('starfield', 'assets/starfield.png');
+        game.load.image('introTexture', 'assets/spaceBackground.jpg');
+        game.load.image('starfield', 'assets/water_texture.jpg');
     },
     
     create: function() {

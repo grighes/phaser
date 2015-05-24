@@ -10,8 +10,19 @@ var player;
 var aliens;
 var score = 0;
 var scoreString = '';
+var scoreText;
 var lives;
 var starfield;
+var bullet;
+var bullets;
+var bulletTime = 0;
+var cursors;
+var explosions;
+var enemyBullet;
+var fireButton;
+var firingTimer = 0;
+var stateText;
+var livingEnemies = [];
 
 // Add all the states
 game.state.add('boot', bootState);
