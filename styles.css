@@ -1,0 +1,17 @@
+body {
+  background-color: #e73d3d;  
+}
+
+nav {
+  background-color: none;
+}
+
+.header {
+  background-image: url("imgs/html5_wallpaper_transparency.png");
+  background-position: center top;
+}
+
+.wrap-all {
+  margin-left: 15%;
+}
+

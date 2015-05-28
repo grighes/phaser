@@ -25,7 +25,7 @@ var playState = {
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
 
-    this.createAliens();
+    /*this.createAliens();*/
 
     // Game input
     cursors = game.input.keyboard.createCursorKeys();
@@ -67,7 +67,7 @@ var playState = {
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
     bullets.createMultiple(30, 'bullet');
     bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 1);
+    bullets.setAll('anchor.y', 0.5);
     bullets.setAll('outOfBoundsKill', true);
     bullets.setAll('checkWorldBounds', true);
 
@@ -257,11 +257,11 @@ var playState = {
       bullet = bullets.getFirstExists(false);
 
       if (bullet) {
-        bullet.reset(player.body.x + 16, player.body.y + 16);
-        bullet.lifespan = 2000;
+        bullet.reset(player.body.x + 60, player.body.y + 60);
+        bullet.lifespan = 900;
         bullet.rotation = player.rotation;
         game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
-        bulletTime = game.time.now + 50;
+        bulletTime = game.time.now + 250;
         /*bullet.reset(player.x, player.y + 8);
         bullet.body.velocity.y = -400;
         bulletTime = game.time.now + 200;*/
@@ -277,15 +277,13 @@ var playState = {
 
   },
 
-  /*  render: function() {
-
-      game.debug.spriteInfo(player, 32, 32);
-      game.debug.text('angularVelocity: ' + player.body.angularVelocity, 32, 200);
-      game.debug.text('angularAcceleration: ' + player.body.angularAcceleration, 32, 232);
-      game.debug.text('angularDrag: ' + player.body.angularDrag, 32, 264);
-      // game.debug.text('deltaZ: ' + player.body.deltaZ(), 32, 296);
-
-    },*/
+  /*render: function() {
+    game.debug.spriteInfo(player, 32, 32);
+    game.debug.text('angularVelocity: ' + player.body.angularVelocity, 32, 200);
+    game.debug.text('angularAcceleration: ' + player.body.angularAcceleration, 32, 232);
+    game.debug.text('angularDrag: ' + player.body.angularDrag, 32, 264);
+    // game.debug.text('deltaZ: ' + player.body.deltaZ(), 32, 296);
+  },*/
 
   // Function to continue cenario
   /*screenWrap: function(sprite) {
