@@ -1,6 +1,9 @@
 var loadState = {
     
     preload: function() {
+        // Add a background image
+        game.add.image(0, 0, 'background');
+        
         // Add a 'loading...' label on the screen
         var loadingLabel = game.add.text(game.world.centerX, 150, 'loading...', {
             font: '30px Arial',
@@ -13,10 +16,10 @@ var loadState = {
         game.load.setPreloadSprite(progressBar);
         
         // Load all our assets
-        game.load.image('player', 'assets/player2.png');
-        game.load.image('bullet', 'assets/bullet.png');
+        game.load.image('player', 'assets/player3.png');
+        game.load.image('bullet', 'assets/bullets.png');
         game.load.image('life', 'assets/green_ball.png');
-        game.load.image('invader', 'assets/alien-sprite.png');
+        game.load.image('invader', 'assets/alien-sprite1.png');
         game.load.image('enemyBullet', 'assets/enemy-bullet.png');
         game.load.spritesheet('kaboom', 'assets/explode.png', 128, 128);
         // game.load.image('bullet', 'assets/bullets.png');

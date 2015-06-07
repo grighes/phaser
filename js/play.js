@@ -25,7 +25,7 @@ var playState = {
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
 
-    /*this.createAliens();*/
+    this.createAliens();
 
     // Game input
     cursors = game.input.keyboard.createCursorKeys();
@@ -100,12 +100,17 @@ var playState = {
     if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
       player.body.angularVelocity = -200;
     }
+    
     else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
       player.body.angularVelocity = 200;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
       game.physics.arcade.velocityFromAngle(player.angle, 300, player.body.velocity);
+    }
+    
+    if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+      game.physics.arcade.velocityFromAngle(player.angle, -50, player.body.velocity);
     }
 
     if (fireButton.isDown) {
@@ -128,6 +133,19 @@ var playState = {
 
   createAliens: function() {
 
+    for (var y = 0; y < 4; y++) {
+      for (var x = 0; x < 10; x++) {
+        var alien = aliens.create(x * 48, y * 50, 'invader');
+        alien.anchor.setTo(0.5, 0.5);
+        // alien.animations.add('fly', [0, 1, 2, 3], 20, true);
+        // alien.play('fly');
+        alien.body.moves = false;
+      }
+    }
+
+    aliens.x = 100;
+    aliens.y = 50;
+    
     for (var y = 0; y < 4; y++) {
       for (var x = 0; x < 10; x++) {
         var alien = aliens.create(x * 48, y * 50, 'invader');
@@ -257,8 +275,8 @@ var playState = {
       bullet = bullets.getFirstExists(false);
 
       if (bullet) {
-        bullet.reset(player.body.x + 60, player.body.y + 60);
-        bullet.lifespan = 900;
+        bullet.reset(player.body.x + 20, player.body.y + 18);
+        bullet.lifespan = 1000;
         bullet.rotation = player.rotation;
         game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
         bulletTime = game.time.now + 250;

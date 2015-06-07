@@ -4,6 +4,8 @@ var bootState = {
         
         // Load the image
         game.load.image('progressBar', 'assets/progressBar.png');
+        
+        game.load.image('background', 'assets/introTexture1.jpg');
     },
     
     create: function() {

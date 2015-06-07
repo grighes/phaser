@@ -1,5 +1,5 @@
 body {
-  background-color: #e73d3d;  
+  background-color: #DAB28B;  
 }
 
 nav {
@@ -7,7 +7,6 @@ nav {
 }
 
 .header {
-  background-image: url("imgs/html5_wallpaper_transparency.png");
   background-position: center top;
 }
 
