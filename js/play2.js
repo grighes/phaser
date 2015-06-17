@@ -1,5 +1,5 @@
 // New name for the state
-var playState = {
+var playState2 = {
 
   create: function() {
 
@@ -7,8 +7,8 @@ var playState = {
     game.renderer.clearBeforeRender = false;
     game.renderer.roundPixels = true;
 
-    // The scrolling starfield background
-    starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
+    // The scrolling background
+    background = game.add.tileSprite(0, 0, 800, 600, 'space');
 
     // The hero!
     //player = game.add.sprite(163, 157, 'player');
@@ -32,18 +32,18 @@ var playState = {
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     // The score
-    scoreString = 'Score : ';
-    scoreText = game.add.text(10, 10, scoreString + score, {
-      font: '34px Arial',
+    scoreString = 'Score: ';
+    scoreText = game.add.text(20, 10, scoreString + score, {
+      font: '25px Arial',
       fill: '#fff'
     });
 
     // Lives
     lives = game.add.group();
-    game.add.text(game.world.width - 100, 10, 'Lives : ', {
-      font: '34px Arial',
+    /*game.add.text(game.world.width - 165, 10, 'Lives: ', {
+      font: '25px Arial',
       fill: '#fff'
-    });
+    });*/
 
     //  Text
     stateText = game.add.text(game.world.centerX, game.world.centerY, ' ', {
@@ -56,7 +56,7 @@ var playState = {
 
     for (var i = 0; i < 3; i++) {
       var life = lives.create(game.world.width - 100 + (30 * i), 60, 'life');
-      life.anchor.setTo(0.5, 0.5);
+      life.anchor.setTo(2.5, 0.5);
       life.angle = 90;
       life.alpha = 0.4;
     }
@@ -91,7 +91,7 @@ var playState = {
 
   update: function() {
     //  Scroll the background
-    starfield.tilePosition.x -= 5;
+    background.tilePosition.x -= 1;
 
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
