@@ -2,6 +2,17 @@ var menuState = {
     
     create: function() {
         
+        // Menu Audio
+        menuAudio = game.add.audio('menu-audio');
+        menuAudio.loop = true;
+        menuAudio.volume = 0.2;
+        menuAudio.play();
+        
+        // Stage One Ambiente Sound
+        stageOneAudio = game.add.audio('sea');
+        stageOneAudio.loop = true;
+        stageOneAudio.volume = 0.5;
+        
         // Add a background image
         game.add.image(0, 0, 'introTexture');
         
@@ -39,6 +50,9 @@ var menuState = {
     start: function() {
         
         // Start the actual game
+        menuAudio.stop();
         game.state.start('play1');
+        stageOneAudio.play();
+        
     },
 };
