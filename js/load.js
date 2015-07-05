@@ -1,12 +1,18 @@
 var loadState = {
 
     preload: function() {
+
+        // Add sounds
+        menuAudio     = game.add.audio('menu-audio');
+        stageOneAudio = game.add.audio('sea');
+        enemysPassing = game.add.audio('enemysPassing');
+
         // Add a background image
         game.add.image(0, 0, 'background');
 
         // Add a 'loading...' label on the screen
         var loadingLabel = game.add.text(game.world.centerX, 150, 'loading...', {
-            font: '30px Arial',
+            font: '30px Play',
             fill: '#ffffff'
         });
         
@@ -24,8 +30,11 @@ var loadState = {
         game.load.image('life', 'assets/green_ball.png');
         game.load.image('invader', 'assets/alien-sprite.png');
         game.load.image('enemyBullet', 'assets/enemy-bullet.png');
+        game.load.image('bossOne', 'assets/boss-mutation1.png');
         game.load.spritesheet('kaboom', 'assets/explode.png', 128, 128);
-        // game.load.image('bullet', 'assets/bullets.png');
+        
+        // Criar o pixel do emiter
+        game.load.image('pixel', 'assets/pixel.png');
 
         /* Play2 */
 

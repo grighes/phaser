@@ -9,32 +9,40 @@ game.global = {
 var aliens;
 var bullets;
 var bulletTime = 0;
+var bossOne
 var cursors;
+var counterDead = 10;
+var counterDeadText;
+var counterDeadString = '';
 var explosions;
 var enemyBullet;
+var enemyLaser;
+var explosionSound1;
+var explosionSound2;
+var enemysPassing;
 var fireButton;
 var firingTimer = 0;
+var heroLaser;
+var heroLaserExtra;
+var imagemDePontuacao;
 var lives;
 var livingEnemies = [];
 var player;
+var pause;
 var score = 0;
 var scoreString = '';
 var scoreText;
+var startLabel;
 var starfield;
 var stateText;
 var shadow;
-var spaceKey;
 var showDebug = true;
 var nDeath = 0;
 var newAliens;
 var menuAudio;
 var stageOneAudio;
-var heroLaser;
-var heroLaserExtra;
-var enemyLaser;
-var explosionSound1;
-var explosionSound2;
-var enemysPassing;
+var timer = 0;
+
 
 // Add all the states
 game.state.add('boot', bootState);

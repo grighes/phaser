@@ -11,22 +11,25 @@ var playState2 = {
     background = game.add.tileSprite(0, 0, 800, 600, 'space');
 
     // The hero!
-    //player = game.add.sprite(163, 157, 'player');
-    player = game.add.sprite(60, 247, 'player');
+    player = game.add.sprite(60, 300, 'player');
     player.anchor.setTo(0.5);
-
     game.physics.enable(player, Phaser.Physics.ARCADE);
     player.body.collideWorldBounds = true;
     player.body.maxVelocity.set(200);
 
-    //  The invaders - Fase um
+    // The invaders - Fase um
     aliens = game.add.group();
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
-    aliens.createMultiple(10, 'invader');
+    aliens.createMultiple(10, 'bossOne');
 
-    // chama a função createAliens para cada inimigo morto
+    // Chama a função createAliens para cada inimigo morto
     game.time.events.loop(1000, this.createAliens, this);
+
+    // Boss
+    // bossOne = game.add.group();
+    // bossOne.enableBody = true;
+    // bossOne.physicsBodyType = Phaser.Physics.ARCADE;
 
     // Game input
     cursors = game.input.keyboard.createCursorKeys();
@@ -35,8 +38,8 @@ var playState2 = {
     /* Implentar pause e sombra ainda! */
 
     // Pause Game
-    spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
-    spaceKey.onDown.add(this.togglePause, this);
+    // spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+    // spaceKey.onDown.add(this.togglePause, this);
 
     /*
     shadow = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
@@ -48,6 +51,13 @@ var playState2 = {
     // The score
     scoreString = 'Score: ';
     scoreText = game.add.text(20, 10, scoreString + score, {
+      font: '25px Arial',
+      fill: '#fff'
+    });
+
+    // Counter Dead Enemys
+    counterDeadString = 'To kill: ';
+    counterDeadText = game.add.text(200, 10, counterDeadString + counterDead, {
       font: '25px Arial',
       fill: '#fff'
     });
@@ -97,17 +107,32 @@ var playState2 = {
     explosions.createMultiple(30, 'kaboom');
     explosions.forEach(this.setupInvader, this);
 
-  },
+    // Laser sound hero
+    heroLaser = game.add.audio('heroLaser');
+    heroLaserExtra = game.add.audio('heroLaserExtra');
+    heroLaser.volume = 0.9;
 
-  togglePause: function() {
+    // Laser sound enemy
+    enemyLaser = game.add.audio('enemyLaser');
+    enemyLaser.volume = 0.4;
 
-    game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
+    // Explosion sound
+    explosionSound1 = game.add.audio('explosionSound1');
+    explosionSound2 = game.add.audio('explosionSound2');
+    explosionSound1.volume = 0.9;
+    explosionSound2.volume = 0.9;
+
+    // Enemys passing
+    enemysPassing.volume = 0.3;
+    enemysPassing.loop = true;
+    enemysPassing.play();
+
 
   },
 
   update: function() {
     //  Scroll the background
-    background.tilePosition.x -= 4;
+    background.tilePosition.x -= 2;
 
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -123,6 +148,9 @@ var playState2 = {
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
       game.physics.arcade.velocityFromAngle(player.angle, 300, player.body.velocity);
+
+      //  Scroll the background
+      background.tilePosition.x -= 3;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
@@ -147,8 +175,8 @@ var playState2 = {
   createAliens: function() {
 
     newAliens = aliens.getFirstDead();
-    if(newAliens == null) {
-       game.state.start('play2');
+    if (newAliens == null) {
+      game.state.start('play1');
     }
     else {
       newAliens.reset(game.world.centerX, game.world.randomY);
@@ -159,9 +187,8 @@ var playState2 = {
       // newAliens.body.bounce.x = 1;
       newAliens.checkWorldBounds = true;
       newAliens.outOfBoundsKill = true;
-    }
-    
 
+    }
   },
 
   setupInvader: function(invader) {
@@ -170,6 +197,16 @@ var playState2 = {
     invader.anchor.y = 0.5;
     invader.animations.add('kaboom');
 
+  },
+
+
+  createBoss: function() {
+    bossOne.x = 100;
+    bossOne.y = 50;
+    var boss = bossOne.create(x * 48, y * 50, 'bossOne');
+    var tween = game.add.tween(bossOne).to({
+      x: 200
+    }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
   },
 
   collisionHandler: function(bullet, alien) {
@@ -182,31 +219,38 @@ var playState2 = {
     score += 30;
     scoreText.text = scoreString + score;
 
+    // Decrease total Enemys Dead
+    counterDead--;
+    counterDeadText.text = counterDeadString + counterDead;
+
     //  And create an explosion :)
     var explosion = explosions.getFirstExists(false);
     explosion.reset(alien.body.x, alien.body.y);
     explosion.play('kaboom', 30, false, true);
+    explosionSound1.play();
+    explosionSound2.play();
+
 
     if (alien.kill()) {
       nDeath++;
     }
 
-    // if (nDeath == 5) {
-    //   // aliens.destroy(false);
-    //   aliens.group.remove(aliens);
-    // }
+    if (nDeath == 30) {
 
-    if (nDeath == 6) {
+      //this.createBoss();
+
+      // original
       score += 1000;
       scoreText.text = scoreString + score;
 
-      /* esperar user dar enter para começar nova fase */
+      // esperar user dar enter para começar nova fase
       enemyBullets.callAll('kill', this);
-      
-      // stateText.text = "You Won, \n Click to restart";
-      // stateText.visible = true;
 
-      game.state.start('play2');
+      stateText.text = "You Won, Click to restart";
+      stateText.visible = true;
+      stageOneAudio.stop();
+      
+      game.state.start('menu');
 
       //the "click to restart" handler
       game.input.onTap.addOnce(this.restart, this);
@@ -227,6 +271,8 @@ var playState2 = {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(player.body.x, player.body.y);
     explosion.play('kaboom', 30, false, true);
+    explosionSound1.play();
+    explosionSound2.play();
 
     // When the player dies
     if (lives.countLiving() < 1) {
@@ -237,8 +283,10 @@ var playState2 = {
       stateText.text = "GAME OVER";
       stateText.visible = true;
 
+      game.state.start('play2');
+
       //the "click to restart" handler
-      game.input.onTap.addOnce(this.restart, this);
+      // game.input.onTap.addOnce(this.restart, this);
     }
 
   },
@@ -257,16 +305,14 @@ var playState2 = {
     });
 
     if (enemyBullet && livingEnemies.length > 0) {
-
       var random = game.rnd.integerInRange(0, livingEnemies.length - 1);
-
       // randomly select one of them
       var shooter = livingEnemies[random];
       // And fire the bullet from this enemy
       enemyBullet.reset(shooter.body.x, shooter.body.y);
-
       game.physics.arcade.moveToObject(enemyBullet, player, 120);
       firingTimer = game.time.now + 2000;
+      enemyLaser.play();
     }
 
   },
@@ -282,9 +328,13 @@ var playState2 = {
         bullet.rotation = player.rotation;
         game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
         bulletTime = game.time.now + 250;
-        /*bullet.reset(player.x, player.y + 8);
+        heroLaser.play();
+        heroLaserExtra.play();
+        /*
+        bullet.reset(player.x, player.y + 8);
         bullet.body.velocity.y = -400;
-        bulletTime = game.time.now + 200;*/
+        bulletTime = game.time.now + 200;
+        */
       }
     }
 
