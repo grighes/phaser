@@ -22,7 +22,7 @@ var menuState = {
     nameLabel.anchor.setTo(0.5, 0.5);
 
     // Show the score at the center of the screen
-    if (score1 == 0) {
+    if (isNaN(scoreTotal) || scoreTotal == 0) {
       var scoreLabel = game.add.text(game.world.centerX, game.world.centerY,
         'You dont have any score', {
           font: '25px Play',
@@ -32,7 +32,7 @@ var menuState = {
     else {
 
       var scoreLabel = game.add.text(game.world.centerX, game.world.centerY,
-        'Best Score: ' + score1, {
+        'Best Score: ' + scoreTotal, {
           font: '25px Play',
           fill: '#222'
         });

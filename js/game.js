@@ -3,7 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameDiv');
 
 // Define our 'global' variable
 // game.global = {
-    
+
 // };
 
 var aliens;
@@ -31,7 +31,7 @@ var livingEnemies = [];
 var player;
 var pause;
 var score1 = 0;
-var scoreTotal = 0;
+var scoreTotal;
 var scoreString = '';
 var scoreText;
 var startLabel;
@@ -45,6 +45,7 @@ var menuAudio;
 var sea;
 var timer = 0;
 var restart;
+var emitterShip;
 
 // Add all the states
 game.state.add('boot', bootState);

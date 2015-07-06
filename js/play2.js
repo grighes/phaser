@@ -140,6 +140,48 @@ var playState2 = {
     // Change the size of the emitter
     this.emitter.width = 69;
     this.emitter.height = 42;
+    
+    
+    
+    /* Emitter test for ship */
+
+    // Create the emitter with 15 particles. We don't need to set the x and y
+    // Since we don't know where to do the explosion yet
+    this.emitterShip = game.add.emitter(player.x - 10, player.y, 400);
+
+    // Set the 'pixel' image for the particles
+    this.emitterShip.makeParticles('pixel');
+
+    // Set the y speed of the particles between -150 and 150
+    // The speed will be randomly picked between -150 and 150 for each particle
+    this.emitterShip.setYSpeed(-30, 30);
+    // this.emitterShip.setYSpeed(200, 180);
+
+    // Do the same for the x speed
+    this.emitterShip.setXSpeed(200, 30);
+    // this.emitterShip.setXSpeed(-30, 30);
+
+    // Use no gravity for the particles
+    this.emitterShip.gravity = 0;
+
+    // Emit different particles
+    this.emitterShip.makeParticles(['pixel']);
+
+    // Scale the particles
+    this.emitterShip.minParticleScale = 1;
+    this.emitterShip.maxParticleScale = 0.7;
+
+    // Rotate the particles
+    /*    this.emitterShip.minRotation = 10;
+        this.emitterShip.maxRotation = 100;*/
+    this.emitterShip.setRotation(50, -50);
+
+    this.emitterShip.setAlpha(1, 0.01, 800);
+    this.emitterShip.setScale(0.05, 0.4, 0.05, 0.4, 2000, Phaser.Easing.Quintic.Out);
+
+    // Change the size of the emitter
+    this.emitterShip.width = 20;
+    //this.emitterShip.height = 50;
 
   },
 
@@ -164,6 +206,13 @@ var playState2 = {
 
       //  Scroll the background
       background.tilePosition.x -= 3;
+      
+      // Set the position of the emitter on the player
+      this.emitterShip.x = player.x;
+      this.emitterShip.y = player.y;
+
+      // Start the emitter, by exploding 15 particles that will live for 600ms
+      this.emitterShip.start(true, 600, null, 15);
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
@@ -294,7 +343,7 @@ var playState2 = {
       nDeath++;
     }
 
-    if (nDeath == 1) {
+    if (nDeath == 2) {
 
       // original
       score1 += 2000;
