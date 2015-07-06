@@ -134,7 +134,6 @@ var playState1 = {
     this.emitter.width = 69;
     this.emitter.height = 42;
 
-
     /* Emitter test for ship */
 
     // Create the emitter with 15 particles. We don't need to set the x and y
@@ -333,7 +332,7 @@ var playState1 = {
       nDeath++;
     }
 
-    if (nDeath == 2) {
+    if (nDeath == 10) {
 
       // original
       score1 += 1000;
@@ -341,13 +340,13 @@ var playState1 = {
 
       // esperar user dar enter para começar nova fase
       enemyBullets.callAll('kill', this);
-
-      game.state.start('play2');
-
+      
       sea.stop();
       gametrack.stop();
       counterDead = 15;
       nDeath = 0;
+      game.state.start('play2');
+
     }
 
   },

@@ -23,8 +23,7 @@ var playState3 = {
     aliens = game.add.group();
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
-    aliens.createMultiple(10, 'bossOne');
-    aliens.createMultiple(10, 'invader');
+    aliens.createMultiple(20, 'bossOne');
     // Chama a função createAliens para cada inimigo morto
     game.time.events.loop(1000, this.createAliens, this);
 
@@ -340,7 +339,7 @@ var playState3 = {
       nDeath++;
     }
 
-    if (nDeath == 2) {
+    if (nDeath == 20) {
 
       // original
       score1 += 3000;

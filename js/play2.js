@@ -343,7 +343,7 @@ var playState2 = {
       nDeath++;
     }
 
-    if (nDeath == 2) {
+    if (nDeath == 15) {
 
       // original
       score1 += 2000;
@@ -352,11 +352,10 @@ var playState2 = {
       // esperar user dar enter para começar nova fase
       enemyBullets.callAll('kill', this);
       
-      game.state.start('play3');
-      
       gametrack.stop();
       counterDead = 20;
       nDeath = 0;
+      game.state.start('play3');
 
     }
 
