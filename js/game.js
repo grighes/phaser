@@ -2,9 +2,9 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameDiv');
 
 // Define our 'global' variable
-game.global = {
-    score: 0
-};
+// game.global = {
+    
+// };
 
 var aliens;
 var bullets;
@@ -22,6 +22,7 @@ var explosionSound2;
 var enemysPassing;
 var fireButton;
 var firingTimer = 0;
+var gametrack;
 var heroLaser;
 var heroLaserExtra;
 var imagemDePontuacao;
@@ -29,7 +30,8 @@ var lives;
 var livingEnemies = [];
 var player;
 var pause;
-var score = 0;
+var score1 = 0;
+var scoreTotal = 0;
 var scoreString = '';
 var scoreText;
 var startLabel;
@@ -40,9 +42,9 @@ var showDebug = true;
 var nDeath = 0;
 var newAliens;
 var menuAudio;
-var stageOneAudio;
+var sea;
 var timer = 0;
-
+var restart;
 
 // Add all the states
 game.state.add('boot', bootState);
@@ -50,7 +52,9 @@ game.state.add('load', loadState);
 game.state.add('menu', menuState);
 game.state.add('play1', playState1);
 game.state.add('play2', playState2);
-// game.state.add('play3', playState3);
+game.state.add('play3', playState3);
+game.state.add('gameOver', gameOverState);
+game.state.add('won', wonState);
 
 // Start the 'boot' state
 game.state.start('boot');

@@ -3,6 +3,8 @@ var playState1 = {
 
   create: function() {
 
+    gametrack.play();
+
     // This will run in Canvas mode, so let's gain a little speed and display
     game.renderer.clearBeforeRender = false;
     game.renderer.roundPixels = true;
@@ -25,7 +27,6 @@ var playState1 = {
 
     // Chama a função createAliens para cada inimigo morto
     game.time.events.loop(1000, this.createAliens, this);
-
 
     // Game input
     cursors = game.input.keyboard.createCursorKeys();
@@ -203,7 +204,7 @@ var playState1 = {
 
     // The score
     scoreString = 'Score: ';
-    scoreText = game.add.text(20, 3, scoreString + score, {
+    scoreText = game.add.text(20, 3, scoreString + score1, {
       font: '25px Play',
       fill: '#fff'
     });
@@ -218,11 +219,11 @@ var playState1 = {
     // Lives
     lives = game.add.group();
 
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 3; i++) {
       var life = lives.create(game.world.width - 100 + (30 * i), 60, 'life');
       life.anchor.setTo(3, 0);
       life.angle = 90;
-      life.alpha = 0.4;
+      life.alpha = 0.9;
     }
 
     //Faz sprite seguir a câmera
@@ -266,16 +267,6 @@ var playState1 = {
 
   },
 
-
-  createBoss: function() {
-    bossOne.x = 100;
-    bossOne.y = 50;
-    var boss = bossOne.create(x * 48, y * 50, 'bossOne');
-    var tween = game.add.tween(bossOne).to({
-      x: 200
-    }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-  },
-
   collisionHandler: function(bullet, alien) {
 
     // When a bullet hits an alien we kill them both
@@ -283,8 +274,8 @@ var playState1 = {
     alien.kill();
 
     // Increase the score
-    score += 30;
-    scoreText.text = scoreString + score;
+    score1 += 60;
+    scoreText.text = scoreString + score1;
 
     // Decrease total Enemys Dead
     counterDead--;
@@ -302,24 +293,21 @@ var playState1 = {
       nDeath++;
     }
 
-    if (nDeath == 10) {
+    if (nDeath == 1) {
 
       // original
-      score += 1000;
-      scoreText.text = scoreString + score;
+      score1 += 1000;
+      scoreText.text = scoreString + score1;
 
       // esperar user dar enter para começar nova fase
       enemyBullets.callAll('kill', this);
 
-      // stateText.text = "You Won, \n Click to restart";
-      // stateText.visible = true;
-      stageOneAudio.stop();
-      counterDead = 30;
-      nDeath = 0;
       game.state.start('play2');
 
-      //the "click to restart" handler
-      game.input.onTap.addOnce(this.restart, this);
+      sea.stop();
+      gametrack.stop();
+      counterDead = 15;
+      nDeath = 0;
     }
 
   },
@@ -331,6 +319,11 @@ var playState1 = {
 
     if (live) {
       live.kill();
+    }
+
+    if(score1 >= 25) {
+      score1 -= 25;
+      scoreText.text = scoreString + score1;
     }
 
     //  And create an explosion :)
@@ -355,11 +348,10 @@ var playState1 = {
       // Start the emitter, by exploding 15 particles that will live for 600ms
       this.emitter.start(true, 600, null, 15);
 
-      stateText.text = "GAME OVER";
-      stateText.visible = true;
+      game.state.start(this.fade('gameOver'));
       nDeath = 0;
-      //the "click to restart" handler
-      game.input.onTap.addOnce(this.restart, this);
+      sea.stop();
+      gametrack.stop();
     }
 
   },
@@ -380,22 +372,20 @@ var playState1 = {
     explosionSound2.play();
 
     // When the player dies
-    if (lives.countLiving() < 1) {
-      player.kill();
 
-      // Set the position of the emitter on the player
-      this.emitter.x = player.x;
-      this.emitter.y = player.y;
+    player.kill();
 
-      // Start the emitter, by exploding 15 particles that will live for 600ms
-      this.emitter.start(true, 600, null, 15);
+    // Set the position of the emitter on the player
+    this.emitter.x = player.x;
+    this.emitter.y = player.y;
 
-      stateText.text = "GAME OVER";
-      stateText.visible = true;
-      nDeath = 0;
-      //the "click to restart" handler
-      game.input.onTap.addOnce(this.restart, this);
-    }
+    // Start the emitter, by exploding 15 particles that will live for 600ms
+    this.emitter.start(true, 600, null, 15);
+
+    game.state.start(this.fade('gameOver'));
+    nDeath = 0;
+    sea.stop();
+    gametrack.stop();
 
   },
 
@@ -482,22 +472,42 @@ var playState1 = {
 
   },*/
 
-  restart: function() {
+  fade: function(nextState) {
+    var spr_bg = this.game.add.graphics(0, 0);
+    spr_bg.beginFill(this.fadeColor, 1);
+    spr_bg.drawRect(0, 0, this.game.width, this.game.height);
+    spr_bg.alpha = 0;
+    spr_bg.endFill();
 
-    //  A new level starts
+    this.nextState = nextState;
 
-    //  resets the life count
-    lives.callAll('revive');
-    //  And brings the aliens back from the dead :)
-    aliens.removeAll();
-
-    this.createAliens();
-
-    //  revives the player
-    player.revive();
-    //  hides the text
-    stateText.visible = false;
-
+    s = this.game.add.tween(spr_bg)
+    s.to({
+      alpha: 1
+    }, 500, null)
+    s.onComplete.add(this.changeState, this)
+    s.start();
   },
+
+  changeState: function() {
+    this.game.state.start(this.nextState);
+    this.fadeOut();
+  },
+
+  fadeOut: function() {
+    var spr_bg = this.game.add.graphics(0, 0);
+    spr_bg.beginFill(this.fadeColor, 1);
+    spr_bg.drawRect(0, 0, this.game.width, this.game.height);
+    spr_bg.alpha = 1;
+    spr_bg.endFill();
+
+    s = this.game.add.tween(spr_bg)
+    s.to({
+      alpha: 0
+    }, 600, null)
+    s.start();
+  },
+
+
 
 };
